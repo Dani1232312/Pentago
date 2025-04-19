@@ -95,8 +95,9 @@ jobs:
           } else {
             console.log("No PR number found. Skipping comment creation.");
           }
-          env:
-            GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+    env:
+      GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
   dependency-submission:
     runs-on: ubuntu-latest
