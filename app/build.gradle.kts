@@ -42,9 +42,9 @@ tasks.named<Test>("test") {
     useJUnitPlatform()
 }
 
-test {
+tasks.test {
     reports {
-        junitXml.enabled = true  // Ensure XML reports are enabled
-        html.enabled = true      // Enable HTML reports (optional)
+        junitXml.isEnabled = true  // Enables XML report
+        html.isEnabled = true      // Enables HTML report (optional)
     }
 }
