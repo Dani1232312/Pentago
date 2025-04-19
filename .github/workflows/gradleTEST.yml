@@ -96,7 +96,8 @@ jobs:
               console.log("No PR number found. Skipping comment creation.");
             }
         env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}  # Use your PAT here
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
 
 
