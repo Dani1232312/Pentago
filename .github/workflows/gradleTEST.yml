@@ -1,0 +1,54 @@
+name: Java CI with Gradle (Test)
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    # Step 1: Checkout code
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Step 2: Set up JDK 17
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    # Step 3: Grant execute permissions to gradlew
+    - name: Grant execute permissions to gradlew
+      run: chmod +x gradlew  # Make gradlew executable
+
+    # Step 4: Run tests with Gradle
+    - name: Run tests
+      run: ./gradlew test  # Run the tests in the test directory
+
+  dependency-submission:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    # Step 1: Checkout the code again for dependency submission
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Step 2: Set up JDK 17 again
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    # Step 3: Generate and submit the dependency graph
+    - name: Generate and submit dependency graph
+      uses: gradle/actions/dependency-submission@v4
