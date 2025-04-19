@@ -71,25 +71,25 @@ jobs:
             }
           });
 
-let comment = "### Test Results\n\n";
-
-testResults.forEach(result => {
-  comment += `- ${result.file}:\n  - Report generated\n\n`;
-});
-
-if (testResults.length > 0) {
-  comment += "✅ **Test reports generated successfully**!";
-} else {
-  comment += "⚠️ **No test reports found**.";
-}
-
-const prNumber = context.payload.pull_request.number;
-await github.rest.issues.createComment({
-  issue_number: prNumber,
-  owner: context.repo.owner,
-  repo: context.repo.repo,
-  body: comment
-});
+          let comment = "### Test Results\n\n";
+          
+          testResults.forEach(result => {
+            comment += `- ${result.file}:\n  - Report generated\n\n`;
+          });
+          
+          if (testResults.length > 0) {
+            comment += "✅ **Test reports generated successfully**!";
+          } else {
+            comment += "⚠️ **No test reports found**.";
+          }
+          
+          const prNumber = context.payload.pull_request.number;
+          await github.rest.issues.createComment({
+            issue_number: prNumber,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
 
 
   dependency-submission:
