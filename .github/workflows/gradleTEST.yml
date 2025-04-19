@@ -31,7 +31,49 @@ jobs:
     # Step 4: Run tests with Gradle
     - name: Run tests
       run: ./gradlew test  # Run the tests in the test directory
+      
+    # Step 5: Parse test results and post a comment on the PR
+    - name: Post test results on PR
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const path = 'Pentago/build/test-results/test/TEST-*.xml';  // Path to test result XML files
+          
+          const testResults = [];
+          const files = fs.readdirSync(path);
+          
+          files.forEach(file => {
+            const content = fs.readFileSync(`${path}/${file}`, 'utf8');
+            const passedTests = (content.match(/<testcase/g) || []).length;
+            const failedTests = (content.match(/<failure/g) || []).length;
+            testResults.push({
+              file,
+              passed: passedTests,
+              failed: failedTests
+            });
+          });
 
+          let comment = "### Test Results\n\n";
+
+          testResults.forEach(result => {
+            comment += `- ${result.file}:\n  - Passed: ${result.passed}\n  - Failed: ${result.failed}\n\n`;
+          });
+
+          if (testResults.some(result => result.failed > 0)) {
+            comment += "⚠️ **Some tests failed**. Please review the details above.";
+          } else {
+            comment += "✅ **All tests passed**!";
+          }
+
+          const prNumber = context.payload.pull_request.number;
+          await github.rest.issues.createComment({
+            issue_number: prNumber,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
+          
   dependency-submission:
     runs-on: ubuntu-latest
     permissions:
