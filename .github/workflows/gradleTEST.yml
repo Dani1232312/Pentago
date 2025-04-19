@@ -44,53 +44,53 @@ jobs:
       with:
         script: |
           const fs = require('fs');
-          const path = './build/test-results/test';  // Adjust this path based on where your test results are located
-
+          const path = './app/build/reports/tests/test/classes';  // Adjusted path to your HTML report directory
+          
           // Check if the directory exists
           if (!fs.existsSync(path)) {
             console.log("Test results directory does not exist!");
             return;
           }
-
+          
           const testResults = [];
           const files = fs.readdirSync(path);
-
+          
           if (files.length === 0) {
             console.log("No test result files found.");
             return;
           }
-
+          
           files.forEach(file => {
             const filePath = `${path}/${file}`;
-            const content = fs.readFileSync(filePath, 'utf8');
-            const passedTests = (content.match(/<testcase/g) || []).length;
-            const failedTests = (content.match(/<failure/g) || []).length;
-            testResults.push({
-              file: filePath,
-              passed: passedTests,
-              failed: failedTests
-            });
+            
+            if (filePath.endsWith('.html')) {
+              testResults.push({
+                file: filePath,
+                result: 'HTML report available'
+              });
+            }
           });
 
-          let comment = "### Test Results\n\n";
+let comment = "### Test Results\n\n";
 
-          testResults.forEach(result => {
-            comment += `- ${result.file}:\n  - Passed: ${result.passed}\n  - Failed: ${result.failed}\n\n`;
-          });
+testResults.forEach(result => {
+  comment += `- ${result.file}:\n  - Report generated\n\n`;
+});
 
-          if (testResults.some(result => result.failed > 0)) {
-            comment += "⚠️ **Some tests failed**. Please review the details above.";
-          } else {
-            comment += "✅ **All tests passed**!";
-          }
+if (testResults.length > 0) {
+  comment += "✅ **Test reports generated successfully**!";
+} else {
+  comment += "⚠️ **No test reports found**.";
+}
 
-          const prNumber = context.payload.pull_request.number;
-          await github.rest.issues.createComment({
-            issue_number: prNumber,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: comment
-          });
+const prNumber = context.payload.pull_request.number;
+await github.rest.issues.createComment({
+  issue_number: prNumber,
+  owner: context.repo.owner,
+  repo: context.repo.repo,
+  body: comment
+});
+
 
   dependency-submission:
     runs-on: ubuntu-latest
