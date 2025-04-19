@@ -14,90 +14,91 @@ jobs:
       issues: write  # Added permission for writing comments on issues and PRs
 
     steps:
-    # Step 1: Checkout code
-    - name: Checkout code
-      uses: actions/checkout@v4
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    # Step 2: Set up JDK 17
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
+      # Step 2: Set up JDK 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
 
-    # Step 3: Grant execute permissions to gradlew
-    - name: Grant execute permissions to gradlew
-      run: chmod +x gradlew  # Make gradlew executable
+      # Step 3: Grant execute permissions to gradlew
+      - name: Grant execute permissions to gradlew
+        run: chmod +x gradlew  # Make gradlew executable
 
-    # Step 4: Run tests with Gradle
-    - name: Run tests
-      run: ./gradlew test  # Run the tests in the test directory
+      # Step 4: Run tests with Gradle
+      - name: Run tests
+        run: ./gradlew test  # Run the tests in the test directory
 
-    # Step 5: List all files in the build directory for debugging
-    - name: List all files in the build directory for debugging
-      run: |
-        echo "Listing files in the build directory..."
-        ls -R ./build  # Listing the build directory where test results should be
+      # Step 5: List all files in the build directory for debugging
+      - name: List all files in the build directory for debugging
+        run: |
+          echo "Listing files in the build directory..."
+          ls -R ./build  # Listing the build directory where test results should be
 
-    # Step 6: Parse test results and post a comment on the PR
-    - name: Post test results on PR
-      uses: actions/github-script@v6
-      with:
-        script: |
-          const fs = require('fs');
-          const path = './app/build/reports/tests/test/classes';  // Adjusted path to your HTML report directory
-          
-          // Check if the directory exists
-          if (!fs.existsSync(path)) {
-            console.log("Test results directory does not exist!");
-            return;
-          }
-          
-          const testResults = [];
-          const files = fs.readdirSync(path);
-          
-          if (files.length === 0) {
-            console.log("No test result files found.");
-            return;
-          }
-          
-          files.forEach(file => {
-            const filePath = `${path}/${file}`;
-            
-            if (filePath.endsWith('.html')) {
-              testResults.push({
-                file: filePath,
-                result: 'HTML report available'
-              });
+      # Step 6: Parse test results and post a comment on the PR
+      - name: Post test results on PR
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const path = './app/build/reports/tests/test/classes';  // Adjusted path to your HTML report directory
+
+            // Check if the directory exists
+            if (!fs.existsSync(path)) {
+              console.log("Test results directory does not exist!");
+              return;
             }
-          });
 
-          let comment = "### Test Results\n\n";
-          
-          testResults.forEach(result => {
-            comment += `- ${result.file}:\n  - Report generated\n\n`;
-          });
-          
-          if (testResults.length > 0) {
-            comment += "✅ **Test reports generated successfully**!";
-          } else {
-            comment += "⚠️ **No test reports found**.";
-          }
-          
-          const prNumber = context.payload.pull_request.number;
-          if (prNumber) {
-            await github.rest.issues.createComment({
-              issue_number: prNumber,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: comment
+            const testResults = [];
+            const files = fs.readdirSync(path);
+
+            if (files.length === 0) {
+              console.log("No test result files found.");
+              return;
+            }
+
+            files.forEach(file => {
+              const filePath = `${path}/${file}`;
+
+              if (filePath.endsWith('.html')) {
+                testResults.push({
+                  file: filePath,
+                  result: 'HTML report available'
+                });
+              }
             });
-          } else {
-            console.log("No PR number found. Skipping comment creation.");
-          }
 
-    env:
-      GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+            let comment = "### Test Results\n\n";
+
+            testResults.forEach(result => {
+              comment += `- ${result.file}:\n  - Report generated\n\n`;
+            });
+
+            if (testResults.length > 0) {
+              comment += "✅ **Test reports generated successfully**!";
+            } else {
+              comment += "⚠️ **No test reports found**.";
+            }
+
+            const prNumber = context.payload.pull_request.number;
+            if (prNumber) {
+              await github.rest.issues.createComment({
+                issue_number: prNumber,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            } else {
+              console.log("No PR number found. Skipping comment creation.");
+            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}  # Use your PAT here
+
+
 
   dependency-submission:
     runs-on: ubuntu-latest
