@@ -41,3 +41,10 @@ tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
+
+test {
+    reports {
+        junitXml.enabled = true  // Ensure XML reports are enabled
+        html.enabled = true      // Enable HTML reports (optional)
+    }
+}
