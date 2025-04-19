@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      issues: write  # Added permission for writing comments on issues and PRs
 
     steps:
     # Step 1: Checkout code
@@ -84,13 +85,16 @@ jobs:
           }
           
           const prNumber = context.payload.pull_request.number;
-          await github.rest.issues.createComment({
-            issue_number: prNumber,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: comment
-          });
-
+          if (prNumber) {
+            await github.rest.issues.createComment({
+              issue_number: prNumber,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+          } else {
+            console.log("No PR number found. Skipping comment creation.");
+          }
 
   dependency-submission:
     runs-on: ubuntu-latest
