@@ -26,11 +26,11 @@ jobs:
       uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
 
     - name: Give permission to gradlew
-      run: chmod +x Pentago/gradlew  # Ensure gradlew in Pentago folder is executable
+      run: chmod +x gradlew  # Ensure gradlew is executable (located in the root)
 
     - name: Build with Gradle Wrapper
-      run: ./Pentago/gradlew build  # Ensure correct gradlew in Pentago folder
-      working-directory: Pentago  # Make sure you're in the right folder for Gradle tasks
+      run: ./gradlew build  # Run gradlew from the root directory
+      working-directory: Pentago  # Gradle tasks will run from the Pentago folder
 
   dependency-submission:
     runs-on: ubuntu-latest
@@ -50,4 +50,4 @@ jobs:
     - name: Generate and submit dependency graph
       uses: gradle/actions/dependency-submission@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
       with:
-        working-directory: Pentago
+        working-directory: Pentago  # Generate dependency graph from the Pentago directory
