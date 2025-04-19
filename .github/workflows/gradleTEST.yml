@@ -45,7 +45,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const path = './build/reports/tests/test/classes';  # Corrected path for test results
+            const path = './build/reports/tests/test/classes'; // Path to the test results
 
             if (!fs.existsSync(path)) {
               console.log("Test results directory not found!");
@@ -75,7 +75,11 @@ jobs:
               comment += `- ${result.file}:\n  - Report generated\n\n`;
             });
 
-            comment += testResults.length > 0 ? "✅ **Test reports generated successfully**!" : "⚠️ **No test reports found**.";
+            if (testResults.length > 0) {
+              comment += "✅ **Test reports generated successfully**!";
+            } else {
+              comment += "⚠️ **No test reports found**.";
+            }
 
             const prNumber = context.payload.pull_request.number;
             if (prNumber) {
