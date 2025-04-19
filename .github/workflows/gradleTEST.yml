@@ -32,11 +32,11 @@ jobs:
     - name: Run tests
       run: ./gradlew test  # Run the tests in the test directory
 
-    # Step 5: List files in the build directory for debugging (optional)
-    - name: List files in the build directory
+    # Step 5: List all files in the build directory for debugging
+    - name: List all files in the build directory for debugging
       run: |
         echo "Listing files in the build directory..."
-        ls -R Pentago/build/
+        ls -R ./build  # Listing the build directory where test results should be
 
     # Step 6: Parse test results and post a comment on the PR
     - name: Post test results on PR
@@ -44,7 +44,7 @@ jobs:
       with:
         script: |
           const fs = require('fs');
-          const path = 'Pentago/build/test-results/test';  // Adjust this path after debugging if necessary
+          const path = './build/test-results/test';  // Adjust this path based on where your test results are located
 
           // Check if the directory exists
           if (!fs.existsSync(path)) {
