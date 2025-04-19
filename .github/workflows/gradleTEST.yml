@@ -2,17 +2,16 @@ name: Java CI with Gradle (Test)
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      issues: write  # Permission to write comments on issues and PRs
-      pull_requests: write  # Added permission to work with pull requests
+      issues: write  # Ensure we have write permissions to comment on PRs
 
     steps:
       # Step 1: Checkout code
@@ -28,34 +27,28 @@ jobs:
 
       # Step 3: Grant execute permissions to gradlew
       - name: Grant execute permissions to gradlew
-        run: chmod +x gradlew  # Make gradlew executable
+        run: chmod +x gradlew
 
       # Step 4: Run tests with Gradle
       - name: Run tests
-        run: ./gradlew test  # Run the tests in the test directory
+        run: ./gradlew test
 
-      # Step 5: List all files in the build directory for debugging
-      - name: List all files in the build directory for debugging
+      # Step 5: List files for debugging
+      - name: List files in the build directory
         run: |
           echo "Listing files in the build directory..."
-          ls -R ./build  # Listing the build directory where test results should be
+          ls -R ./build
 
-      # Step 6: Debug PR context to ensure PR data is available
-      - name: Debug PR context
-        run: |
-          echo "PR Context: ${{ toJson(github.event.pull_request) }}"
-
-      # Step 7: Parse test results and post a comment on the PR
+      # Step 6: Post test results to PR
       - name: Post test results on PR
         uses: actions/github-script@v6
         with:
           script: |
             const fs = require('fs');
-            const path = './app/build/reports/tests/test/classes';  // Adjusted path to your HTML report directory
+            const path = './build/reports/tests/test/classes';  # Corrected path for test results
 
-            // Check if the directory exists
             if (!fs.existsSync(path)) {
-              console.log("Test results directory does not exist!");
+              console.log("Test results directory not found!");
               return;
             }
 
@@ -69,7 +62,6 @@ jobs:
 
             files.forEach(file => {
               const filePath = `${path}/${file}`;
-
               if (filePath.endsWith('.html')) {
                 testResults.push({
                   file: filePath,
@@ -79,18 +71,13 @@ jobs:
             });
 
             let comment = "### Test Results\n\n";
-
             testResults.forEach(result => {
               comment += `- ${result.file}:\n  - Report generated\n\n`;
             });
 
-            if (testResults.length > 0) {
-              comment += "✅ **Test reports generated successfully**!";
-            } else {
-              comment += "⚠️ **No test reports found**.";
-            }
+            comment += testResults.length > 0 ? "✅ **Test reports generated successfully**!" : "⚠️ **No test reports found**.";
 
-            const prNumber = context.payload.pull_request ? context.payload.pull_request.number : null;
+            const prNumber = context.payload.pull_request.number;
             if (prNumber) {
               await github.rest.issues.createComment({
                 issue_number: prNumber,
@@ -103,3 +90,21 @@ jobs:
             }
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  dependency-submission:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Generate and submit dependency graph
+        uses: gradle/actions/dependency-submission@v4
