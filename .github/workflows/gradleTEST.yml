@@ -10,8 +10,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      issues: write  # Ensure we have write permissions to comment on PRs
+      contents: read         # Needed for reading repository contents
+      issues: write          # Allows the action to comment on PRs
+      pull_requests: write   # Allows the action to comment on pull requests
+      # Ensure the token has write access for PR comments
 
     steps:
       # Step 1: Checkout code
@@ -39,7 +41,14 @@ jobs:
           echo "Listing files in the build directory..."
           ls -R ./build
 
-      # Step 6: Post test results to PR
+      # Step 6: Debug PR context (important for checking the availability of PR data)
+      - name: Debug PR context
+        run: |
+          echo "PR Number: ${{ github.event.pull_request.number }}"
+          echo "Pull request title: ${{ github.event.pull_request.title }}"
+          echo "Is this a pull request? ${{ github.event_name == 'pull_request' }}"
+
+      # Step 7: Post test results to PR
       - name: Post test results on PR
         uses: actions/github-script@v6
         with:
@@ -81,7 +90,8 @@ jobs:
               comment += "⚠️ **No test reports found**.";
             }
 
-            const prNumber = context.payload.pull_request.number;
+            // Ensure PR number is available before commenting
+            const prNumber = ${{ github.event.pull_request.number }};
             if (prNumber) {
               await github.rest.issues.createComment({
                 issue_number: prNumber,
