@@ -31,17 +31,15 @@ application {
 }
 
 tasks.named<Test>("test") {
-    // Use JUnit Platform for unit tests.
     useJUnitPlatform()
-    reports {
-        junitXml.isEnabled = true  // Enables XML report
-        html.isEnabled = true      // Enables HTML report (optional)
-    }
-}
 
-tasks.test {
     reports {
-        junitXml.enabled = true  // Correct syntax to enable XML report
-        html.enabled = true      // Correct syntax to enable HTML report
+        junitXml.required.set(true)
+        html.required.set(true)
+    }
+
+    // Display test results in the console
+    testLogging {
+        events("passed", "skipped", "failed")
     }
 }
