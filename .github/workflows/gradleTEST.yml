@@ -45,7 +45,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const path = './build/reports/tests/test/classes'; // Path to the test results
+            const path = './app/build/reports/tests/test/classes';
 
             if (!fs.existsSync(path)) {
               console.log("Test results directory not found!");
