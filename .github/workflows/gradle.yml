@@ -1,31 +1,101 @@
-name: PMD
+name: Java CI with Gradle
 
 on:
   push:
-    branches:
-      - '*'
+    branches: [ "master" ]
   pull_request:
-    branches:
-      - '*'
+    branches: [ "master" ]
 
 jobs:
-  pmd:
+  build:
     runs-on: ubuntu-latest
+    permissions: write-all
 
     steps:
-      - name: Checkout repository
+      # Step 1: Checkout the code
+      - name: Checkout code
         uses: actions/checkout@v4
 
+      # Step 2: Set up JDK 17 and Gradle cache
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          java-version: 17
+          java-version: '17'
+          distribution: 'temurin'
 
-      - name: Download build cache artifact
-        uses: actions/download-artifact@v3
+      # Step 3: Cache Gradle dependencies and wrapper
+      - name: Cache Gradle wrapper
+        uses: actions/cache@v3
         with:
-          name: build-cache
+          path: ~/.gradle/wrapper/
+          key: gradle-wrapper-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-wrapper-${{ runner.os }}-
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches/
+          key: gradle-caches-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            gradle-caches-${{ runner.os }}-
+
+      # Step 4: Give permission to gradlew
+      - name: Grant execute permissions to gradlew
+        run: chmod +x gradlew
+
+      # Step 5: Build with Gradle (includes compilation and test)
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      # Step 6: Run tests separately (redundant if covered in build, but clear)
+      - name: Run tests
+        run: ./gradlew test
+
+      # Step 7: Publish test results to PR (even on failure)
+      - name: Publish test report to PR
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Unit Tests
+          path: app/build/test-results/test/TEST-*.xml
+          reporter: java-junit
+          token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Step 8: Upload the Gradle cache as an artifact
+      - name: Upload Gradle cache as an artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: gradle-cache
           path: ~/.gradle/caches/
 
-      - name: Run PMD
-        run: ./gradlew pmdMain pmdTest
+  dependency-submission:
+    runs-on: ubuntu-latest
+    needs: build  # Ensure this job runs after the build job
+    permissions:
+      contents: write
+
+    steps:
+      # Step 1: Checkout the code again
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up JDK 17 and Gradle cache
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # Step 3: Download the Gradle cache artifact
+      - name: Download Gradle cache artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: gradle-cache
+          path: ~/.gradle/caches/
+
+      # Step 4: Submit the dependency graph
+      - name: Generate and submit dependency graph
+        uses: gradle/actions/dependency-submission@v4
