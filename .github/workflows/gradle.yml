@@ -1,16 +1,6 @@
-name: Java CI with Gradle
-
-on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
-
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions: write-all
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -21,47 +11,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Cache Gradle wrapper
-        uses: actions/cache@v3
-        with:
-          path: ~/.gradle/wrapper/
-          key: gradle-wrapper-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            gradle-wrapper-${{ runner.os }}-
-
-      - name: Cache Gradle dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.gradle/caches/
-          key: gradle-caches-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            gradle-caches-${{ runner.os }}-
-
-      - name: Grant execute permissions to gradlew
-        run: chmod +x gradlew
-
       - name: Build with Gradle
         run: ./gradlew build
 
       - name: Run tests
         run: ./gradlew test
-
-      - name: Publish test report to PR
-        if: always()
-        uses: dorny/test-reporter@v1
-        with:
-          name: Unit Tests
-          path: app/build/test-results/test/TEST-*.xml
-          reporter: java-junit
-          token: ${{ secrets.GITHUB_TOKEN }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Gradle cache as an artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: gradle-cache
-          path: ~/.gradle/caches/
 
   pmd:
     runs-on: ubuntu-latest
@@ -75,12 +29,6 @@ jobs:
         with:
           java-version: 17
           distribution: 'temurin'
-
-      - name: Download Gradle cache artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: gradle-cache
-          path: ~/.gradle/caches/
 
       - name: Run PMD
         run: ./gradlew pmdMain pmdTest
@@ -98,12 +46,6 @@ jobs:
           java-version: 17
           distribution: 'temurin'
 
-      - name: Download Gradle cache artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: gradle-cache
-          path: ~/.gradle/caches/
-
       - name: Run Checkstyle
         run: ./gradlew checkstyleMain checkstyleTest
 
@@ -119,12 +61,6 @@ jobs:
         with:
           java-version: 17
           distribution: 'temurin'
-
-      - name: Download Gradle cache artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: gradle-cache
-          path: ~/.gradle/caches/
 
       - name: Run SpotBugs
         run: ./gradlew spotbugsMain spotbugsTest
