@@ -9,9 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write  # Needed for PR comment/report
+    permissions: write-all
 
     steps:
     # Step 1: Checkout the code
