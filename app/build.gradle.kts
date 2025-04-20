@@ -68,18 +68,15 @@ tasks.register("bEx") {
     outputs.upToDateWhen { false } // Force task to always run
 }
 
-// Global ignoreFailures settings
+// Global enforce failure settings for PMD, Checkstyle, and SpotBugs tasks
 tasks.withType<org.gradle.api.plugins.quality.Pmd>().configureEach {
-    ignoreFailures = true
-    finalizedBy(tasks.build)
+    ignoreFailures = false  // Fail build if PMD violations are found
 }
 
 tasks.withType<Checkstyle>().configureEach {
-    ignoreFailures = true
-    finalizedBy(tasks.build)
+    ignoreFailures = false  // Fail build if Checkstyle violations are found
 }
 
 tasks.withType<com.github.spotbugs.snom.SpotBugsTask>().configureEach {
-    ignoreFailures = true
-    finalizedBy(tasks.build)
+    ignoreFailures = false  // Fail build if SpotBugs violations are found
 }
