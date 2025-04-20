@@ -12,3 +12,9 @@ plugins {
 
 rootProject.name = "Pentago"
 include("app")
+
+buildCache {
+    local {
+        isEnabled = true
+    }
+}
