@@ -12,18 +12,15 @@ jobs:
     permissions: write-all
 
     steps:
-      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Step 2: Set up JDK 17 and Gradle cache
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # Step 3: Cache Gradle dependencies and wrapper
       - name: Cache Gradle wrapper
         uses: actions/cache@v3
         with:
@@ -40,19 +37,15 @@ jobs:
           restore-keys: |
             gradle-caches-${{ runner.os }}-
 
-      # Step 4: Give permission to gradlew
       - name: Grant execute permissions to gradlew
         run: chmod +x gradlew
 
-      # Step 5: Build with Gradle (includes compilation and test)
       - name: Build with Gradle
         run: ./gradlew build
 
-      # Step 6: Run tests separately (redundant if covered in build, but clear)
       - name: Run tests
         run: ./gradlew test
 
-      # Step 7: Publish test results to PR (even on failure)
       - name: Publish test report to PR
         if: always()
         uses: dorny/test-reporter@v1
@@ -64,38 +57,74 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Step 8: Upload the Gradle cache as an artifact
       - name: Upload Gradle cache as an artifact
         uses: actions/upload-artifact@v4
         with:
           name: gradle-cache
           path: ~/.gradle/caches/
 
-  dependency-submission:
+  pmd:
     runs-on: ubuntu-latest
-    needs: build  # Ensure this job runs after the build job
-    permissions:
-      contents: write
-
+    needs: build
     steps:
-      # Step 1: Checkout the code again
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: Set up JDK 17 and Gradle cache
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: 17
           distribution: 'temurin'
 
-      # Step 3: Download the Gradle cache artifact
       - name: Download Gradle cache artifact
         uses: actions/download-artifact@v4
         with:
           name: gradle-cache
           path: ~/.gradle/caches/
 
-      # Step 4: Submit the dependency graph
-      - name: Generate and submit dependency graph
-        uses: gradle/actions/dependency-submission@v4
+      - name: Run PMD
+        run: ./gradlew pmdMain pmdTest
+
+  checkstyle:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'temurin'
+
+      - name: Download Gradle cache artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: gradle-cache
+          path: ~/.gradle/caches/
+
+      - name: Run Checkstyle
+        run: ./gradlew checkstyleMain checkstyleTest
+
+  spotbugs:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'temurin'
+
+      - name: Download Gradle cache artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: gradle-cache
+          path: ~/.gradle/caches/
+
+      - name: Run SpotBugs
+        run: ./gradlew spotbugsMain spotbugsTest
