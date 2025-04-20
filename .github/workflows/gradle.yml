@@ -46,7 +46,7 @@ jobs:
         name: Unit Tests
         path: app/build/test-results/test/TEST-*.xml
         reporter: java-junit
-        token: ${{ secrets.GH_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
