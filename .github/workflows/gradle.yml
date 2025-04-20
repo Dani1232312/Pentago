@@ -9,28 +9,44 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
+    permissions: write-all
 
     steps:
     # Step 1: Checkout the code
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # Step 2: Set up JDK 17
+    # Step 2: Set up JDK 17 and Gradle cache
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
+        cache: gradle
 
     # Step 3: Give permission to gradlew
     - name: Grant execute permissions to gradlew
-      run: chmod +x gradlew  # Make gradlew executable
+      run: chmod +x gradlew
 
-    # Step 4: Run Gradle build from the Pentago folder
+    # Step 4: Build with Gradle (includes compilation and test)
     - name: Build with Gradle
       run: ./gradlew build
+
+    # Step 5: Run tests separately (redundant if covered in build, but clear)
+    - name: Run tests
+      run: ./gradlew test
+
+    # Step 6: Publish test results to PR (even on failure)
+    - name: Publish test report to PR
+      if: always()
+      uses: dorny/test-reporter@v1
+      with:
+        name: Unit Tests
+        path: app/build/test-results/test/TEST-*.xml
+        reporter: java-junit
+        token: ${{ secrets.GITHUB_TOKEN }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   dependency-submission:
     runs-on: ubuntu-latest
@@ -38,17 +54,18 @@ jobs:
       contents: write
 
     steps:
-    # Step 1: Checkout the code again for the dependency submission step
+    # Step 1: Checkout the code again
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # Step 2: Set up JDK 17 again
+    # Step 2: Set up JDK 17 and Gradle cache
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
+        cache: gradle
 
-    # Step 3: Generate and submit the dependency graph
+    # Step 3: Submit the dependency graph
     - name: Generate and submit dependency graph
       uses: gradle/actions/dependency-submission@v4
