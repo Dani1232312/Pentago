@@ -1,10 +1,10 @@
-package controller;
+package org.example.controller;
 
-import exceptions.ExitProgram;
-import model.Balls;
-import model.ProtocolMessages;
-import model.player.computer.SmartStrategy;
-import run.ClientTUI;
+import org.example.exceptions.ExitProgram;
+import org.example.model.Balls;
+import org.example.model.ProtocolMessages;
+import org.example.model.player.computer.SmartStrategy;
+import org.example.ClientTUI;
 
 import java.io.*;
 import java.net.Socket;

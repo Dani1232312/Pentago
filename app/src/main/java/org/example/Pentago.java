@@ -1,11 +1,11 @@
-package run;
+package org.example;
 
-import controller.Game;
-import model.Balls;
-import model.player.ComputerPlayer;
-import model.player.HumanPlayer;
-import model.player.Player;
-import model.player.computer.SmartStrategy;
+import org.example.controller.Game;
+import org.example.model.Balls;
+import org.example.model.player.ComputerPlayer;
+import org.example.model.player.HumanPlayer;
+import org.example.model.player.Player;
+import org.example.model.player.computer.SmartStrategy;
 
 import java.util.Scanner;
 

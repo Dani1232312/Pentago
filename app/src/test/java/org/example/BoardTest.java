@@ -1,7 +1,7 @@
-package tests;
+package org.example;
 
-import model.Balls;
-import model.Board;
+import org.example.model.Balls;
+import org.example.model.Board;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

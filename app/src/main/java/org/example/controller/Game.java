@@ -1,8 +1,8 @@
-package controller;
+package org.example.controller;
 
-import model.Balls;
-import model.Board;
-import model.player.Player;
+import org.example.model.Balls;
+import org.example.model.Board;
+import org.example.model.player.Player;
 
 import java.util.Random;
 

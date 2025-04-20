@@ -1,6 +1,6 @@
-package controller;
+package org.example.controller;
 
-import model.ProtocolMessages;
+import org.example.model.ProtocolMessages;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;

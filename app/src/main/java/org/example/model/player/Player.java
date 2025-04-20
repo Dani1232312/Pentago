@@ -1,7 +1,7 @@
-package model.player;
+package org.example.model.player;
 
-import model.Balls;
-import model.Board;
+import org.example.model.Balls;
+import org.example.model.Board;
 
 /**
  * A player abstract class.
