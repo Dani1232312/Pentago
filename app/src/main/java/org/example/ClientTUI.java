@@ -7,7 +7,6 @@ import org.example.model.Board;
 import org.example.view.ClientView;
 
 import java.io.*;
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;

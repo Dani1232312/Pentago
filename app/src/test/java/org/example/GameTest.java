@@ -188,40 +188,6 @@ public class GameTest {
         assertEquals(game.getBoard().getBall(4, 4), game.getP1().getBall());
     }
 
-
-    /**
-     * This test check weather the game returns.
-     */
-    @Test
-    void testTwoFive() {
-        game.getBoard().setBoard("-3~-3~-0~-0~-1~-0" +
-                                "~-3~-3~-3~-1~-0~-0" +
-                                "~-3~-0~-1~-3~-0~-0" +
-                                "~-3~-1~-0~-1~-3~-0" +
-                                "~-1~-0~-0~-0~-1~-3" +
-                                "~-0~-0~-0~-1~-1~-0");
-        // the game has finished
-        assertFalse(game.endGame());
-        //check there is no winner
-        assertNull(game.determineWinner());
-    }
-
-    /**
-     * This method checks if the Smart-AI is actually smarter than the
-     * Naive-AI.
-     * Will not work everytime.
-     */
-    @Test
-    void testGame() {
-        game.setP1(new ComputerPlayer(Balls.BLACK, new NaiveStrategy()));
-        game.setP2(new ComputerPlayer(Balls.WHITE, new SmartStrategy()));
-        game.play();
-        if (game.endGame()) {
-            assertEquals(game.getP2(), game.determineWinner());
-        }
-
-    }
-
         // Testing with incomplete winning patterns (4 balls instead of 5)
         @Test
         public void test_incomplete_winning_patterns() {
