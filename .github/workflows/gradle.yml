@@ -46,6 +46,8 @@ jobs:
         name: Unit Tests
         path: app/build/test-results/test/TEST-*.xml
         reporter: java-junit
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   dependency-submission:
     runs-on: ubuntu-latest
