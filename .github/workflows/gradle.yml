@@ -3,10 +3,10 @@ name: Gradle CI
 on:
   push:
     branches:
-      - main  # or your default branch
+      - master  # or your default branch
   pull_request:
     branches:
-      - main  # optional but recommended for PR validation
+      - master  # optional but recommended for PR validation
 
 jobs:
   build:
