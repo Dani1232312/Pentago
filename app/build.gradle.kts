@@ -6,7 +6,7 @@ plugins {
     java
     id("checkstyle")
     id("pmd")
-    id("com.github.spotbugs") version "5.0.14"
+    id("com.github.spotbugs") version "6.1.9"
 }
 
 repositories {
@@ -45,7 +45,7 @@ pmd {
 }
 
 spotbugs {
-    toolVersion = "4.8.0"
+    toolVersion = "4.9.3"
 }
 
 // === Checkstyle ===
@@ -57,15 +57,6 @@ checkstyle {
     }
     config = resources.text.fromFile(configFile)
     isShowViolations = true
-}
-
-// Fix classpath for checkstyleMain and checkstyleTest tasks
-tasks.named<Checkstyle>("checkstyleMain") {
-    classpath = sourceSets["main"].runtimeClasspath // Ensure proper runtime classpath for main
-}
-
-tasks.named<Checkstyle>("checkstyleTest") {
-    classpath = sourceSets["test"].runtimeClasspath // Ensure proper runtime classpath for test
 }
 
 // === Safe Exec Task ===

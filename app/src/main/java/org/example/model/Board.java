@@ -154,9 +154,6 @@ public class Board {
      * Clockwise or Counter-Clockwise.
      * @param direction 1 or 0 for ClockWise and CounterClockwise respectively.
      */
-    /*@ requires direction >= 0 && direction <= 1;
-        ensures \old(getSubBoard(direction)) != getSubBoard(direction);
-        */
     public void rotate(int direction) {
         Balls[][] rotate = getSubBoard(direction);
         Balls[][] copy;
@@ -338,15 +335,21 @@ public class Board {
         fields[row][col] = b;
     }
 
+/**
+     * This method returns a string with a nicely formatted board.
+     * @return a String with the board's layout.
+     */
+    @Override
     public String toString() {
-        StringBuilder line = new StringBuilder();
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                line.append(fields[i][j].getNumColor()).append(Balls.DISTANCE);
+        StringBuilder result = new StringBuilder();
+        result.append(NUMBERING[0]).append("\n");
+        for (int row = 0; row < SIZE; row++) {
+            result.append("  ");
+            for (int col = 0; col < SIZE; col++) {
+                result.append(fields[row][col].toString() + DISTANCE);
             }
-            line.append(DISTANCE).append(NUMBERING[i]);
-            line.append("\n");
+            result.append("\n");
         }
-        return line.toString();
+        return result.toString();
     }
 }
