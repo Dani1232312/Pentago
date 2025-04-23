@@ -5,7 +5,7 @@ package org.example.model;
  * This class contains all the logic of the board and how it's designed.
  */
 public class Board {
-    public final int size = 6;
+    public static final int SIZE = 6;
     private Balls[][] fields;
     private static final String[] NUMBERING = {
         "  0  |  1 |  2 |  3 |  4 |  5 ",
@@ -21,15 +21,15 @@ public class Board {
      * The constructor that creates the board object.
      */
     public Board() {
-        fields = new Balls[size][size];
+        fields = new Balls[SIZE][SIZE];
     }
 
     /**
      * This is a method that generates the fields inside the board object containing EMPTY balls.
      */
     public void generateBoard() {
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
                 fields[row][col] = Balls.EMPTY;
             }
         }
@@ -44,8 +44,8 @@ public class Board {
     public void setBoard(String board) {
         String[] split = board.split("~");
         int nr = 0;
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
                 switch (Integer.parseInt(split[nr])) {
                     case 0 -> {
                         setBall(row, col, Balls.indexToBall(0));
@@ -85,21 +85,21 @@ public class Board {
         } else if (subboard >= 2 && subboard <= 3) {
             //top right quadrant
             for (int row = 0; row <= 2; row++) {
-                for (int col = 3; col < size; col++) {
+                for (int col = 3; col < SIZE; col++) {
                     subBoard[row][col - 3] = this.getBall(row, col);
                 }
             }
         } else if (subboard >= 4 && subboard <= 5) {
             //bottom left quadrant
-            for (int row = 3; row < size; row++) {
+            for (int row = 3; row < SIZE; row++) {
                 for (int col = 0; col <= 2; col++) {
                     subBoard[row - 3][col] = this.getBall(row, col);
                 }
             }
         } else if (subboard >= 6 && subboard <= 7) {
             //bottom right quadrant
-            for (int row = 3; row < size; row++) {
-                for (int col = 3; col < size; col++) {
+            for (int row = 3; row < SIZE; row++) {
+                for (int col = 3; col < SIZE; col++) {
                     subBoard[row - 3][col - 3] = this.getBall(row, col);
                 }
             }
@@ -128,21 +128,21 @@ public class Board {
         } else if (quadrant >= 2 && quadrant <= 3) {
             //top right quadrant
             for (int row = 0; row <= 2; row++) {
-                for (int col = 3; col < size; col++) {
+                for (int col = 3; col < SIZE; col++) {
                     setBall(row, col, subBoard[row][col - 3]);
                 }
             }
         } else if (quadrant >= 4 && quadrant <= 5) {
             //bottom left quadrant
-            for (int row = 3; row < size; row++) {
+            for (int row = 3; row < SIZE; row++) {
                 for (int col = 0; col <= 2; col++) {
                     setBall(row, col, subBoard[row - 3][col]);
                 }
             }
         } else if (quadrant >= 6 && quadrant <= 7) {
             //bottom right quadrant
-            for (int row = 3; row < size; row++) {
-                for (int col = 3; col < size; col++) {
+            for (int row = 3; row < SIZE; row++) {
+                for (int col = 3; col < SIZE; col++) {
                     setBall(row, col, subBoard[row - 3][col - 3]);
                 }
             }
@@ -174,8 +174,8 @@ public class Board {
             }
         } else {
             //clockwise rotation
-            row = size / 2;
-            col = size / 2;
+            row = SIZE / 2;
+            col = SIZE / 2;
             copy = new Balls[col][row];
             for (int i = 0; i < row; i++) {
                 for (int j = 0; j < col; j++) {
@@ -196,8 +196,8 @@ public class Board {
     //@ requires ball != null;
 /*@ pure */
     public boolean isWinner(Balls ball) {
-        for (int row = 0; row < size; row++) {
-            for (int col = 0; col < size; col++) {
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
                 // a vertical line
                 if (count(ball, row, col, 1, 0) >= 5) {
                     return true;
@@ -246,7 +246,7 @@ public class Board {
         r = row + dirX;
         c = col + dirY;
         //this while goes in one direction on the line we are checking
-        while (r >= 0 && r < size && c >= 0 && c < size && getBall(r, c).equals(ball)) {
+        while (r >= 0 && r < SIZE && c >= 0 && c < SIZE && getBall(r, c).equals(ball)) {
             counter++;
             r += dirX;
             c += dirY;
@@ -255,7 +255,7 @@ public class Board {
         r = row - dirX;
         c = col - dirY;
         //this while goes in the other direction on the line we are checking
-        while (r >= 0 && r < size && c >= 0 && c < size && getBall(r, c).equals(ball)) {
+        while (r >= 0 && r < SIZE && c >= 0 && c < SIZE && getBall(r, c).equals(ball)) {
             counter++;
             r -= dirX;
             c -= dirY;
@@ -271,8 +271,8 @@ public class Board {
     //@ ensures \result == true || \result == false;
     public boolean boardIsFull() {
         int c = -1;
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
                 if (getBall(i, j).equals(Balls.EMPTY)) {
                     if (c == -1) {
                         c = 0;
@@ -303,8 +303,8 @@ public class Board {
     //@ requires ball != null;
     public void move(int move, Balls ball) {
         //the row and columns can be defined from the index like this:
-        int lastRow = move / size;
-        int lastCol = move % size;
+        int lastRow = move / SIZE;
+        int lastCol = move % SIZE;
         setBall(lastRow, lastCol, ball);
     }
 
@@ -313,8 +313,8 @@ public class Board {
      * @return a Ball array that is the copy of the board.
      */
     public Balls[][] copy() {
-        Balls[][] output = new Balls[size][size];
-        for (int i = 0; i < size; i++) {
+        Balls[][] output = new Balls[SIZE][SIZE];
+        for (int i = 0; i < SIZE; i++) {
             //I had to make it like this because of a checkstyle error.
             output[i][0] = fields[i][0];
             output[i][1] = fields[i][1];
@@ -340,8 +340,8 @@ public class Board {
 
     public String toString() {
         StringBuilder line = new StringBuilder();
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
                 line.append(fields[i][j].getNumColor()).append(Balls.DISTANCE);
             }
             line.append(DISTANCE).append(NUMBERING[i]);

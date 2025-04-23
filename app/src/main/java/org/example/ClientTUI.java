@@ -10,6 +10,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * This is the class that initializes a connection to a server and
@@ -75,8 +76,8 @@ public class ClientTUI {
             try {
                 view.showMessage("Attempting to connect to " + address + ":" + port + "...");
                 serverSock = new Socket(address, port);
-                in = new BufferedReader(new InputStreamReader(serverSock.getInputStream()));
-                out = new BufferedWriter(new OutputStreamWriter(serverSock.getOutputStream()));
+                in = new BufferedReader(new InputStreamReader(serverSock.getInputStream(), StandardCharsets.UTF_8));
+                out = new BufferedWriter(new OutputStreamWriter(serverSock.getOutputStream(), StandardCharsets.UTF_8));
                 view.showMessage("Connection successful.");
 
                 // Initialize the listener, that will take all the messages coming from the

@@ -31,7 +31,7 @@ public class SmartStrategy implements Strategy {
                 copy.move(moveTry, ball);
                 //then rotate the board
                 copy.rotate(rotate);
-                if (copy.isWinner(ball) && board.getBall(moveTry / board.size, moveTry % board.size)
+                if (copy.isWinner(ball) && board.getBall(moveTry / Board.SIZE, moveTry % Board.SIZE)
                         .equals(Balls.EMPTY)) {
                     result[0] = moveTry;
                     result[1] = rotate;
@@ -52,7 +52,7 @@ public class SmartStrategy implements Strategy {
                 copy.rotate(rotate);
                 //if the other ball is winning by making a move. Block him.
                 if (copy.isWinner(Balls.WHITE) &&
-                        board.getBall(moveTry / board.size, moveTry % board.size).
+                        board.getBall(moveTry / Board.SIZE, moveTry % Board.SIZE).
                                 equals(Balls.EMPTY)) {
                     result[0] = moveTry;
                     result[1] = rotate;
