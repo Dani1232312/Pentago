@@ -1,13 +1,13 @@
-package tests;
+package org.example;
 
-import controller.Game;
-import model.Balls;
-import model.Board;
-import model.player.ComputerPlayer;
-import model.player.HumanPlayer;
-import model.player.Player;
-import model.player.computer.NaiveStrategy;
-import model.player.computer.SmartStrategy;
+import org.example.controller.Game;
+import org.example.model.Balls;
+import org.example.model.Board;
+import org.example.model.player.ComputerPlayer;
+import org.example.model.player.HumanPlayer;
+import org.example.model.player.Player;
+import org.example.model.player.computer.NaiveStrategy;
+import org.example.model.player.computer.SmartStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -188,38 +188,102 @@ public class GameTest {
         assertEquals(game.getBoard().getBall(4, 4), game.getP1().getBall());
     }
 
-
-    /**
-     * This test check weather the game returns.
-     */
-    @Test
-    void testTwoFive() {
-        game.getBoard().setBoard("-3~-3~-0~-0~-1~-0" +
-                                "~-3~-3~-3~-1~-0~-0" +
-                                "~-3~-0~-1~-3~-0~-0" +
-                                "~-3~-1~-0~-1~-3~-0" +
-                                "~-1~-0~-0~-0~-1~-3" +
-                                "~-0~-0~-0~-1~-1~-0");
-        // the game has finished
-        assertFalse(game.endGame());
-        //check there is no winner
-        assertNull(game.determineWinner());
-    }
-
-    /**
-     * This method checks if the Smart-AI is actually smarter than the
-     * Naive-AI.
-     * Will not work everytime.
-     */
-    @Test
-    void testGame() {
-        game.setP1(new ComputerPlayer(Balls.BLACK, new NaiveStrategy()));
-        game.setP2(new ComputerPlayer(Balls.WHITE, new SmartStrategy()));
-        game.play();
-        if (game.endGame()) {
-            assertEquals(game.getP2(), game.determineWinner());
+        // Testing with incomplete winning patterns (4 balls instead of 5)
+        @Test
+        public void test_incomplete_winning_patterns() {
+            Game game = new Game();
+            Player p1 = new HumanPlayer("Player1", Balls.WHITE);
+            Player p2 = new HumanPlayer("Player2", Balls.BLACK);
+            game.setP1(p1);
+            game.setP2(p2);
+            game.setCurrentPlayer(p2);
+        
+            // Test incomplete vertical pattern (only 4 balls)
+            game.getBoard().setBoard("-0~-1~-1~-1~-1~-1" +
+                                    "~-0~-1~-1~-1~-1~-1" +
+                                    "~-0~-1~-1~-1~-1~-1" +
+                                    "~-0~-1~-1~-1~-1~-1" +
+                                    "~-1~-1~-1~-1~-1~-1" +
+                                    "~-1~-1~-1~-1~-1~-1");
+            assertNull(game.determineWinner());
+        
+            // Test incomplete horizontal pattern (only 4 balls)
+            game.getBoard().setBoard("-1~-1~-1~-1~-1~-1" +
+                                    "~-1~-1~-1~-1~-1~-1" +
+                                    "~-0~-0~-0~-0~-1~-1" +
+                                    "~-1~-1~-1~-1~-1~-1" +
+                                    "~-1~-1~-1~-1~-1~-1" +
+                                    "~-1~-1~-1~-1~-1~-1");
+            assertNull(game.determineWinner());
+        
+            // Test incomplete diagonal pattern (only 4 balls)
+            game.getBoard().setBoard("-0~-1~-1~-1~-1~-1" +
+                                    "~-1~-0~-1~-1~-1~-1" +
+                                    "~-1~-1~-0~-1~-1~-1" +
+                                    "~-1~-1~-1~-0~-1~-1" +
+                                    "~-1~-1~-1~-1~-1~-1" +
+                                    "~-1~-1~-1~-1~-1~-1");
+            assertNull(game.determineWinner());
+        
+            // Test pattern with different colored balls breaking the sequence
+            game.getBoard().setBoard("-0~-1~-1~-1~-1~-1" +
+                                    "~-1~-0~-1~-1~-1~-1" +
+                                    "~-1~-1~-0~-1~-1~-1" +
+                                    "~-1~-1~-1~-0~-1~-1" +
+                                    "~-1~-1~-1~-1~-3~-1" +
+                                    "~-1~-1~-1~-1~-1~-1");
+            assertNull(game.determineWinner());
         }
 
+            // Testing winner determination with different board configurations
+    @Test
+    public void test_winner_determination_with_different_patterns() {
+        Game game = new Game();
+        Player p1 = new HumanPlayer("Player1", Balls.WHITE);
+        Player p2 = new HumanPlayer("Player2", Balls.BLACK);
+        game.setP1(p1);
+        game.setP2(p2);
+        game.setCurrentPlayer(p2);
+    
+        // Test horizontal winning pattern
+        game.getBoard().setBoard("-1~-1~-1~-1~-1~-1" +
+                                "~-1~-1~-1~-1~-1~-1" +
+                                "~-0~-0~-0~-0~-0~-1" +
+                                "~-1~-1~-1~-1~-1~-1" +
+                                "~-1~-1~-1~-1~-1~-1" +
+                                "~-1~-1~-1~-1~-1~-1");
+        assertEquals(p2.getName(), game.determineWinner().getName());
+    
+        // Test vertical winning pattern
+        game.getBoard().setBoard("-0~-1~-1~-1~-1~-1" +
+                                "~-0~-1~-1~-1~-1~-1" +
+                                "~-0~-1~-1~-1~-1~-1" +
+                                "~-0~-1~-1~-1~-1~-1" +
+                                "~-0~-1~-1~-1~-1~-1" +
+                                "~-1~-1~-1~-1~-1~-1");
+        assertEquals(p2.getName(), game.determineWinner().getName());
+    
+        // Test diagonal winning pattern (top-left to bottom-right)
+        game.getBoard().setBoard("-0~-1~-1~-1~-1~-1" +
+                                "~-1~-0~-1~-1~-1~-1" +
+                                "~-1~-1~-0~-1~-1~-1" +
+                                "~-1~-1~-1~-0~-1~-1" +
+                                "~-1~-1~-1~-1~-0~-1" +
+                                "~-1~-1~-1~-1~-1~-1");
+        assertEquals(p2.getName(), game.determineWinner().getName());
+    
+        // Test diagonal winning pattern (top-right to bottom-left)
+        game.getBoard().setBoard("-1~-1~-1~-1~-1~-0" +
+                                "~-1~-1~-1~-1~-0~-1" +
+                                "~-1~-1~-1~-0~-1~-1" +
+                                "~-1~-1~-0~-1~-1~-1" +
+                                "~-1~-0~-1~-1~-1~-1" +
+                                "~-1~-1~-1~-1~-1~-1");
+        assertEquals(p2.getName(), game.determineWinner().getName());
+    
+        // Test no winner
+        game.getBoard().generateBoard();
+        assertNull(game.determineWinner());
     }
 
 }

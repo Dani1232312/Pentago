@@ -1,9 +1,9 @@
-package tests;
+package org.example;
 
-import model.Balls;
-import model.Board;
-import model.ProtocolMessages;
-import model.player.computer.SmartStrategy;
+import org.example.model.Balls;
+import org.example.model.Board;
+import org.example.model.ProtocolMessages;
+import org.example.model.player.computer.SmartStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

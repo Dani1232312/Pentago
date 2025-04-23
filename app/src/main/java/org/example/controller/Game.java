@@ -1,15 +1,11 @@
-package controller;
+package org.example.controller;
 
-import model.Balls;
-import model.Board;
-import model.player.Player;
+import org.example.model.Balls;
+import org.example.model.Board;
+import org.example.model.player.Player;
 
 import java.util.Random;
 
-
-/**
- * This class contains all the logic of the game.
- */
 public class Game {
     private final Board board;
     private Player p1;
@@ -17,131 +13,89 @@ public class Game {
     private Player currentPlayer;
     private int turn;
 
-    /**
-     * This is the constructor for the Game class that initializes a game with a board.
-     */
     public Game() {
         board = new Board();
         board.generateBoard();
-        Random random = new Random();
-        this.turn = random.nextInt();
+        this.turn = new Random().nextInt(2); // 0 or 1
     }
 
-    /**
-     * This method contains the logic of the game.
-     */
     public void play() {
-        System.out.println();
-        int[] move;
-        System.out.println(board.toString());
-        while (!endGame()) {
+        System.out.println("\nGame started!");
+        System.out.println(board);
+
+        while (!isGameOver()) {
             switchPlayers();
-            //tell the player is his turn
-            System.out.println(currentPlayer.getName() + " makes a move!");
-            //get a move from the player
-            move = currentPlayer.getMove(board);
-            // check if the move is correct
-            if (checkMove(move)) {
+            System.out.println(currentPlayer.getName() + "'s turn.");
+            int[] move = currentPlayer.getMove(board);
+
+            if (isValidMove(move)) {
                 makeMove(move);
                 System.out.println(board);
             } else {
-                System.out.println("Invalid move! Please make another move");
+                System.out.println("Invalid move! Try again.");
             }
         }
-        System.out.println("The game has ended.");
-        if (determineWinner() == null) {
-            System.out.println("Game ended in a draw!");
+
+        System.out.println("Game over!");
+        Player winner = determineWinner();
+        if (winner == null) {
+            System.out.println("It's a draw!");
         } else {
-            Player winner = determineWinner();
-            System.out.println(winner.getName() + " is the winner!");
+            System.out.println(winner.getName() + " wins the game!");
         }
     }
 
-    /**
-     * This method checks if the move is valid and will return true or false respectively.
-     * @param move an array of move "MOVE~<nr>~<nr>".
-     * @return true or false
-     */
-    //@ ensures \result == true || \result == false;
-    //@ requires move.length == 2;
-    //@ requires move[0] >= 0 && move[0] < 36;
-    //@ requires move[1] >= 0 && move[1] < 9;
-    public boolean checkMove(int[] move) {
+    private boolean isValidMove(int[] move) {
         int row = move[0] / board.size;
         int col = move[0] % board.size;
         return board.getBall(row, col).equals(Balls.EMPTY) && move[1] >= 0 && move[1] <= 7;
     }
 
-    /**
-     * This method calls the appropriate functions to make a move.
-     * @param move an array of moves.
-     */
-    //@ ensures \old(turn) == turn + 1;
-    //@ ensures board.getBall(move[0] / board.size, move[0] % board.size)== currentPlayer.getBall();
-    //@ requires move.length == 2;
-    //@ requires move[0] >= 0 && move[0] < 36;
-    //@ requires move[1] >= 0 && move[1] < 9;
-    /*@ pure */
-    public void makeMove(int[] move) {
+    private void makeMove(int[] move) {
         board.move(move[0], currentPlayer.getBall());
         board.rotate(move[1]);
         turn++;
     }
 
-    /**
-     * This method check if the game has finished.
-     * @return true if the game has finished, false otherwise.
-     */
-    //@ ensures \result == true || \result == false;
-    public boolean endGame() {
+    private boolean isGameOver() {
         return board.boardIsFull() || board.fiveInARow();
     }
 
-    /**
-     * This method return the player which has won or null if both have won.
-     * @return null or a player object
-     */
-    //@ ensures \result == null || \typeof(\result) == currentPlayer.getClass();
     public Player determineWinner() {
-        if (board.isWinner(p1.getBall()) && board.isWinner(p2.getBall())) {
-            return null;
-        } else if (board.isWinner(p1.getBall())) {
-            return p1;
-        } else if (board.isWinner(p2.getBall())) {
-            return p2;
-        }
+        boolean p1Won = board.isWinner(p1.getBall());
+        boolean p2Won = board.isWinner(p2.getBall());
+
+        if (p1Won && p2Won) return null;
+        if (p1Won) return p1;
+        if (p2Won) return p2;
         return null;
     }
 
-    /**
-     * This method switches the current player based on the turn number.
-     */
-    //@ensures \old(currentPlayer) != currentPlayer;
     public void switchPlayers() {
-        if (turn % 2 == 0) {
-            currentPlayer = p1;
-        } else {
-            currentPlayer = p2;
-        }
+        currentPlayer = (turn % 2 == 0) ? p1 : p2;
     }
 
-    //Setters and getters
-
+    // Getters and setters
     public Board getBoard() {
-        return this.board;
+        return board;
     }
+
     public Player getP1() {
         return p1;
     }
+
     public Player getP2() {
         return p2;
     }
-    public void setP1(Player player) {
-        this.p1 = player;
+
+    public void setP1(Player p1) {
+        this.p1 = p1;
     }
-    public void setP2(Player player) {
-        this.p2 = player;
+
+    public void setP2(Player p2) {
+        this.p2 = p2;
     }
+
     public void setCurrentPlayer(Player player) {
         this.currentPlayer = player;
     }

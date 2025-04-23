@@ -1,12 +1,12 @@
-package view;
+package org.example.view;
 
-import exceptions.ServerUnavailableException;
-import exceptions.TooFewArguments;
-import model.Balls;
-import model.ProtocolMessages;
-import model.player.computer.NaiveStrategy;
-import model.player.computer.SmartStrategy;
-import run.ClientTUI;
+import org.example.exceptions.ServerUnavailableException;
+import org.example.exceptions.TooFewArguments;
+import org.example.model.Balls;
+import org.example.model.ProtocolMessages;
+import org.example.model.player.computer.NaiveStrategy;
+import org.example.model.player.computer.SmartStrategy;
+import org.example.ClientTUI;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

@@ -1,20 +1,15 @@
-package run;
+package org.example;
 
-import controller.Game;
-import model.Balls;
-import model.player.ComputerPlayer;
-import model.player.HumanPlayer;
-import model.player.Player;
-import model.player.computer.SmartStrategy;
+import org.example.controller.Game;
+import org.example.model.Balls;
+import org.example.model.player.ComputerPlayer;
+import org.example.model.player.HumanPlayer;
+import org.example.model.player.computer.SmartStrategy;
 
 import java.util.Scanner;
 
-/**
- * This is the class that starts the application.
- */
 public class Pentago {
     private static Game game;
-
 
     public static void main(String[] args) {
         game = new Game();
@@ -22,52 +17,63 @@ public class Pentago {
         game.play();
     }
 
-/**
- * A setUp methods that asks the user for input to start a playable game.
- */
     protected static void setUp() {
         printHelloMessage();
-        Scanner s = new Scanner(System.in);
-        String input = s.nextLine();
-        switch (input) {
-            case "continue" -> {
-                String name;
-                System.out.println("Player 1 name:");
-                name = s.nextLine();
-                Player p1 = new HumanPlayer(name, Balls.WHITE);
-                game.setP1(p1);
-                System.out.println("Player 2 name:");
-                name = s.nextLine();
-                Player p2 = new HumanPlayer(name, Balls.BLACK);
-                game.setP2(p2);
+        try (Scanner scanner = new Scanner(System.in)) {
+            while (true) {
+                String input = scanner.nextLine().trim().toLowerCase();
+
+                switch (input) {
+                    case "continue" -> {
+                        setupHumanVsHuman(scanner);
+                        return;
+                    }
+                    case "computer" -> {
+                        setupComputerVsComputer();
+                        return;
+                    }
+                    case "play" -> {
+                        setupHumanVsComputer(scanner);
+                        return;
+                    }
+                    default -> System.out.println("Invalid input. Please type 'continue', 'computer', or 'play'.");
+                }
             }
-            case "computer" -> {
-                Player p1 = new ComputerPlayer(Balls.WHITE, new SmartStrategy());
-                Player p2 = new ComputerPlayer(Balls.BLACK);
-                game.setP1(p1);
-                game.setP2(p2);
-            }
-            case "play" -> {
-                String name;
-                System.out.println("Player 1 name:");
-                name = s.nextLine();
-                Player p1 = new HumanPlayer(name, Balls.WHITE);
-                Player p2 = new ComputerPlayer(Balls.BLACK, new SmartStrategy());
-                game.setP1(p1);
-                game.setP2(p2);
-            }
-            default -> System.out.println("Wrong command!");
         }
     }
 
-    public static void printHelloMessage() {
-        System.out.println("""
-                Welcome to Pentago game!
-                Made by Daniel Botnarenco
+    private static void setupHumanVsHuman(Scanner scanner) {
+        System.out.print("Player 1 name: ");
+        String name1 = scanner.nextLine();
+        System.out.print("Player 2 name: ");
+        String name2 = scanner.nextLine();
 
-                Decide how you want to play. For two player type 'continue'.
-                For Player v Computer type 'play'
-                For Computer v Computer type 'computer'
+        game.setP1(new HumanPlayer(name1, Balls.WHITE));
+        game.setP2(new HumanPlayer(name2, Balls.BLACK));
+    }
+
+    private static void setupHumanVsComputer(Scanner scanner) {
+        System.out.print("Player name: ");
+        String name = scanner.nextLine();
+
+        game.setP1(new HumanPlayer(name, Balls.WHITE));
+        game.setP2(new ComputerPlayer(Balls.BLACK, new SmartStrategy()));
+    }
+
+    private static void setupComputerVsComputer() {
+        game.setP1(new ComputerPlayer(Balls.WHITE, new SmartStrategy()));
+        game.setP2(new ComputerPlayer(Balls.BLACK));
+    }
+
+    private static void printHelloMessage() {
+        System.out.println("""
+                Welcome to Pentago!
+                Created by Daniel Botnarenco
+                
+                Choose a game mode:
+                  - For two players, type: continue
+                  - For player vs computer, type: play
+                  - For computer vs computer, type: computer
                 """);
     }
 }

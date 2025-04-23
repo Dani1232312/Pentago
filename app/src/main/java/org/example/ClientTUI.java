@@ -1,13 +1,12 @@
-package run;
+package org.example;
 
-import controller.Client;
-import exceptions.ExitProgram;
-import exceptions.ServerUnavailableException;
-import model.Board;
-import view.ClientView;
+import org.example.controller.Client;
+import org.example.exceptions.ExitProgram;
+import org.example.exceptions.ServerUnavailableException;
+import org.example.model.Board;
+import org.example.view.ClientView;
 
 import java.io.*;
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;

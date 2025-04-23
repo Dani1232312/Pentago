@@ -1,9 +1,9 @@
-package model.player;
+package org.example.model.player;
 
-import model.Balls;
-import model.Board;
-import model.player.computer.NaiveStrategy;
-import model.player.computer.Strategy;
+import org.example.model.Balls;
+import org.example.model.Board;
+import org.example.model.player.computer.NaiveStrategy;
+import org.example.model.player.computer.Strategy;
 
 /**
  * A type of player class.

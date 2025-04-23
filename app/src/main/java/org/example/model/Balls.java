@@ -1,4 +1,4 @@
-package model;
+package org.example.model;
 
 /**
  * This class contains the model of the Balls for the game.

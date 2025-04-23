@@ -1,7 +1,7 @@
-package model.player.computer;
+package org.example.model.player.computer;
 
-import model.Balls;
-import model.Board;
+import org.example.model.Balls;
+import org.example.model.Board;
 
 /**
  * A interface to differentiate strategies.

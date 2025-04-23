@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN" "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+<!--
+    Checkstyle-Configuration for Java 17
+    Description: Checkstyle configuration for a Java 17 project.
+-->
+<module name="Checker">
+    <property name="severity" value="warning"/>
+    
+    <!-- TreeWalker module which controls how code is checked -->
+    <module name="TreeWalker">
+        <property name="tabWidth" value="4"/>
+        
+        <!-- Javadoc check for methods (no 'scope' property) -->
+        <module name="JavadocMethod"/>
+        
+        <!-- Javadoc checks for types -->
+        <module name="JavadocType"/>
+        
+        <!-- Javadoc checks for variables -->
+        <module name="JavadocVariable"/>
+        
+        <!-- Check style for constant names -->
+        <module name="ConstantName">
+            <property name="format" value="^(logger|[A-Z][A-Z0-9]*(_[A-Z0-9]+)*)$"/>
+        </module>
+        
+        <!-- Check style for local final variables -->
+        <module name="LocalFinalVariableName">
+            <property name="format" value="^([a-z][a-zA-Z0-9]*)$"/>
+        </module>
+        
+        <!-- Check style for local variable names -->
+        <module name="LocalVariableName"/>
+        
+        <!-- Check style for member variable names -->
+        <module name="MemberName"/>
+        
+        <!-- Check style for method names -->
+        <module name="MethodName">
+            <property name="format" value="^[a-z][a-zA-Z0-9_]*$"/>
+        </module>
+        
+        <!-- Check style for package names -->
+        <module name="PackageName"/>
+        
+        <!-- Check style for parameter names -->
+        <module name="ParameterName"/>
+        
+        <!-- Check style for static variable names -->
+        <module name="StaticVariableName">
+            <property name="format" value="^(logger|[a-z][a-zA-Z0-9]*)$"/>
+        </module>
+        
+        <!-- Check style for type names -->
+        <module name="TypeName">
+            <property name="format" value="^[A-Z][a-zA-Z0-9_]*$"/>
+        </module>
+        
+        <!-- Avoid star imports -->
+        <module name="AvoidStarImport"/>
+        
+        <!-- Avoid illegal imports -->
+        <module name="IllegalImport"/>
+        
+        <!-- Avoid redundant imports -->
+        <module name="RedundantImport"/>
+        
+        <!-- Avoid unused imports -->
+        <module name="UnusedImports"/>
+        
+        <!-- Method length checks -->
+        <module name="MethodLength">
+            <property name="max" value="150"/>
+        </module>
+        
+        <!-- Number of method parameters checks -->
+        <module name="ParameterNumber"/>
+        
+        <!-- Check for empty for-loop iterator pads -->
+        <module name="EmptyForIteratorPad"/>
+        
+        <!-- Pad between method parameters -->
+        <module name="MethodParamPad"/>
+        
+        <!-- Whitespace after certain tokens -->
+        <module name="NoWhitespaceAfter">
+            <property name="tokens" value="BNOT,DEC,DOT,INC,LNOT,UNARY_MINUS,UNARY_PLUS"/>
+        </module>
+        
+        <!-- No whitespace before tokens -->
+        <module name="NoWhitespaceBefore"/>
+        
+        <!-- Operator wrap checks -->
+        <module name="OperatorWrap"/>
+        
+        <!-- Parentheses padding -->
+        <module name="ParenPad"/>
+        
+        <!-- Typecast parentheses padding -->
+        <module name="TypecastParenPad"/>
+        
+        <!-- Whitespace after tokens -->
+        <module name="WhitespaceAfter"/>
+        
+        <!-- Whitespace around operators -->
+        <module name="WhitespaceAround">
+          <property name="allowEmptyConstructors" value="true"/>
+          <property name="allowEmptyMethods" value="true"/>
+        </module>
+        
+        <!-- Modifier order -->
+        <module name="ModifierOrder"/>
+        
+        <!-- Redundant modifier checks -->
+        <module name="RedundantModifier"/>
+        
+        <!-- Avoid nested blocks -->
+        <module name="AvoidNestedBlocks"/>
+        
+        <!-- Empty block checks -->
+        <module name="EmptyBlock"/>
+        
+        <!-- Left curly brace style -->
+        <module name="LeftCurly"/>
+        
+        <!-- Need braces around blocks -->
+        <module name="NeedBraces"/>
+        
+        <!-- Right curly brace style -->
+        <module name="RightCurly"/>
+        
+        <!-- Avoid inline conditionals -->
+        <module name="AvoidInlineConditionals">
+            <property name="severity" value="ignore"/>
+        </module>
+        
+        <!-- Empty statement checks -->
+        <module name="EmptyStatement"/>
+
+        
+        <!-- Equals and hashCode implementation checks -->
+        <module name="EqualsHashCode">
+            <property name="severity" value="error"/>
+        </module>
+        
+        <!-- Hidden field checks -->
+        <module name="HiddenField">
+            <property name="ignoreConstructorParameter" value="true"/>
+            <property name="ignoreSetter" value="true"/>
+            <property name="ignoreAbstractMethods" value="true"/>
+        </module>
+        
+        <!-- Illegal instantiation checks -->
+        <module name="IllegalInstantiation"/>
+        
+        <!-- Inner assignment checks -->
+        <module name="InnerAssignment"/>
+        
+        <!-- Magic number checks -->
+        <module name="MagicNumber"/>
+        
+        <!-- Missing default in switch statements -->
+        <module name="MissingSwitchDefault"/>
+        
+        <!-- Package declaration checks -->
+        <module name="PackageDeclaration"/>
+        
+        <!-- Simplify boolean expression checks -->
+        <module name="SimplifyBooleanExpression"/>
+        
+        <!-- Simplify boolean return checks -->
+        <module name="SimplifyBooleanReturn"/>
+        
+        <!-- Design for extension checks -->
+        <module name="DesignForExtension">
+            <property name="severity" value="ignore"/>
+        </module>
+        
+        <!-- Final class checks -->
+        <module name="FinalClass"/>
+        
+        <!-- Hide utility class constructor checks -->
+        <module name="HideUtilityClassConstructor"/>
+        
+        <!-- Mutable exception checks -->
+        <module name="MutableException"/>
+        
+        <!-- Interface is type checks -->
+        <module name="InterfaceIsType"/>
+        
+        <!-- Visibility modifier checks -->
+        <module name="VisibilityModifier"/>
+        
+        <!-- Array type style checks -->
+        <module name="ArrayTypeStyle"/>
+        
+        <!-- Final parameters checks -->
+        <module name="FinalParameters">
+            <property name="severity" value="ignore"/>
+        </module>
+        
+        <!-- TODO comment checks -->
+        <module name="TodoComment">
+            <property name="severity" value="ignore"/>
+        </module>
+        
+        <!-- Upper ellipsis checks -->
+        <module name="UpperEll"/>
+    </module>
+    
+    <!-- Translation module -->
+    <module name="Translation"/>
+    
+    <!-- Newline at end of file check -->
+    <module name="NewlineAtEndOfFile">
+        <property name="severity" value="ignore"/>
+        <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+    </module>
+    
+    <!-- File tab character checks -->
+    <module name="FileTabCharacter">
+        <property name="severity" value="ignore"/>
+        <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+    </module>
+    
+    <!-- Trailing spaces check -->
+    <module name="RegexpSingleline">
+        <property name="severity" value="ignore"/>
+        <property name="format" value="\s+$"/>
+        <property name="message" value="Line has trailing spaces."/>
+        <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+    </module>
+    
+    <!-- File length check -->
+    <module name="FileLength"/>
+</module>
