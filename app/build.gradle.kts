@@ -1,17 +1,6 @@
 // Only fail in CI
 val isCI = System.getenv("CI") == "true"
 
-// Disable pmd/checkstyle/spotbugs on default `check` when not in CI
-if (!isCI) {
-    tasks.named("check") {
-        dependsOn.removeIf {
-            it.name.contains("pmd", ignoreCase = true)
-                || it.name.contains("checkstyle", ignoreCase = true)
-                || it.name.contains("spotbugs", ignoreCase = true)
-        }
-    }
-}
-
 plugins {
     application
     java
