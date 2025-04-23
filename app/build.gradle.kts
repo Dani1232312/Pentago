@@ -1,3 +1,5 @@
+val isCI = System.getenv("CI") == "true"
+
 plugins {
     application
     java
@@ -68,23 +70,14 @@ tasks.register("bEx") {
     outputs.upToDateWhen { false } // Force task to always run
 }
 
-tasks.withType<Checkstyle>().configureEach {
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
+tasks.withType<org.gradle.api.plugins.quality.Pmd>().configureEach {
+    ignoreFailures = !isCI  // only fail in CI
 }
 
-tasks.withType<Pmd>().configureEach {
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
+tasks.withType<Checkstyle>().configureEach {
+    ignoreFailures = !isCI  // only fail in CI
 }
 
 tasks.withType<com.github.spotbugs.snom.SpotBugsTask>().configureEach {
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
+    ignoreFailures = !isCI  // only fail in CI
 }
