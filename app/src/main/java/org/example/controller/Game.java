@@ -46,8 +46,8 @@ public class Game {
     }
 
     private boolean isValidMove(int[] move) {
-        int row = move[0] / board.size;
-        int col = move[0] % board.size;
+        int row = move[0] / Board.SIZE;
+        int col = move[0] % Board.SIZE;
         return board.getBall(row, col).equals(Balls.EMPTY) && move[1] >= 0 && move[1] <= 7;
     }
 

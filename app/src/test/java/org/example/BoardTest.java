@@ -24,8 +24,8 @@ public class BoardTest {
 
     @Test
     void testGeneration() {
-        for (int row = 0; row < board.size; row++) {
-            for (int col = 0; col < board.size; col++) {
+        for (int row = 0; row < Board.SIZE; row++) {
+            for (int col = 0; col < Board.SIZE; col++) {
                 if (board.getBall(row, col).equals(Balls.BLACK) ||
                         board.getBall(row, col).equals(Balls.WHITE) ||
                         board.getBall(row, col) == null) {

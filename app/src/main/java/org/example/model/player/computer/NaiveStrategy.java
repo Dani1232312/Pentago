@@ -27,8 +27,8 @@ public class NaiveStrategy implements Strategy {
         int randomMove;
         randomMove = r.nextInt(high - low) + low;
         //get a random move that is valid.
-        while (board.getBall(randomMove / board.size, randomMove % board.size) == Balls.WHITE
-            || board.getBall(randomMove / board.size, randomMove % board.size) == Balls.BLACK) {
+        while (board.getBall(randomMove / Board.SIZE, randomMove % Board.SIZE) == Balls.WHITE
+            || board.getBall(randomMove / Board.SIZE, randomMove % Board.SIZE) == Balls.BLACK) {
             randomMove = r.nextInt(high - low) + low;
         }
         high = 7;
