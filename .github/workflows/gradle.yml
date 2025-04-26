@@ -21,8 +21,20 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build with Gradle
+      # Run Gradle to ensure caches are created
+      - name: Build with Gradle (first run to create caches)
         run: ./gradlew buildSafe
+
+      # Cache Gradle dependencies and wrapper
+      - name: Cache Gradle dependencies and wrapper
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Run tests
         run: ./gradlew test
@@ -38,6 +50,7 @@ jobs:
           java-version: 17
           distribution: 'temurin'
 
+      # Run PMD
       - name: Run PMD
         run: ./gradlew pmdMain pmdTest
 
@@ -52,6 +65,7 @@ jobs:
           java-version: 17
           distribution: 'temurin'
 
+      # Run Checkstyle
       - name: Run Checkstyle
         run: ./gradlew checkstyleMain checkstyleTest
 
@@ -66,5 +80,6 @@ jobs:
           java-version: 17
           distribution: 'temurin'
 
+      # Run SpotBugs
       - name: Run SpotBugs
         run: ./gradlew spotbugsMain spotbugsTest
